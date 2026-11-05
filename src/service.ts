@@ -109,6 +109,7 @@ export async function capture(
         width: 1200,
         height: 630,
         contentType: "image/jpeg",
+        ...(input.alt !== undefined ? { alt: input.alt } : {}),
       },
       capture: { resolution: input.resolution, source: result.source },
       metadata: input.metadata,

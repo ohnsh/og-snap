@@ -60,6 +60,20 @@ test("metadata, isolated keys/consumers, revision checks and idempotent replay",
   await f.run("request-5", input({ key: "presets/demo" }));
 });
 
+test("alt is published, validated and participates in idempotency", async () => {
+  const f = fixture();
+  const request = input({ alt: 'Camera "one" & two' });
+  const result = await f.run("request-alt", request);
+  expect(result.manifest.image.alt).toBe(request.alt);
+  expect((await f.run("request-alt", request)).replayed).toBe(true);
+  await expect(f.run("request-alt", input({ alt: "Different" }))).rejects.toMatchObject({
+    code: "idempotency_conflict",
+  });
+  expect(() => input({ alt: 42 })).toThrow();
+  expect(() => input({ alt: "x".repeat(501) })).toThrow();
+  expect(input({ alt: "" }).alt).toBe("");
+});
+
 test("concurrent requests launch once; expired capture cannot overwrite newer publication", async () => {
   const f = fixture();
   let finish!: () => void;

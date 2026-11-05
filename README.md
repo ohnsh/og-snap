@@ -60,7 +60,8 @@ curl https://og.ohn.sh/v1/snapshots \
   -H 'Content-Type: application/json' \
   --data '{
     "key": "cameras/quad",
-    "url": "https://vod.ohn.sh/social/preview?camera=quad&width=1600&height=900",
+     "url": "https://vod.ohn.sh/social/preview?camera=quad",
+     "alt": "Quad camera archive in the VOD player",
     "resolution": {"width":1200,"height":630},
     "readySelector": "#social-preview[data-preview-state=ready]",
     "errorSelector": "#social-preview[data-preview-state=error]",
@@ -70,8 +71,8 @@ curl https://og.ohn.sh/v1/snapshots \
   }'
 ```
 
-VOD's existing preview page already fits its internal composition into 1200×630:
-pass its composition dimensions in the URL and capture its 1200×630 element as above.
+VOD's existing preview page renders a fixed 1200×630 composition:
+capture its 1200×630 element as above.
 For a generic full-viewport page, `resolution` directly sets the composition viewport.
 
 - Default viewport: 1200×865. Width: 320–3840; height: 180–2160; integers required.
@@ -81,6 +82,9 @@ For a generic full-viewport page, `resolution` directly sets the composition vie
   after imagery, fonts, and video frames are ready. Optional `errorSelector` fails early.
 - Optional `background`: six-digit hex color, default `#202020`.
 - Metadata is public opaque JSON: object root, max 16 KiB, max depth 16.
+- Optional `alt` is an application-supplied string of at most 500 characters,
+  published as `manifest.image.alt`. It participates in idempotency comparisons.
+  Omission and an explicit empty description are preserved distinctly.
 - Total request limit: 32 KiB. Keys use slash-separated letters, digits, `_`, `-`.
 - Navigation redirects and frames are blocked. Resource requests require configured
   HTTPS origins. Service workers and WebSockets are blocked. API tokens are never
@@ -138,6 +142,10 @@ they exclude capture URLs and private job/lease state. Do not put secrets in met
 
 Use `og-snap/client` from a local/package dependency, or import `src/client.ts`.
 The client and public types have no Cloudflare runtime dependency. Use it server-side.
+`new OgSnap({ consumer: "vod" })` supports unauthenticated `current(key)` reads.
+Only `capture()` and `status()` require a token. Public reads validate manifest
+identity, image URL and dimensions, and the wire schema; invalid responses throw.
+Each method accepts a final `{ signal }` option for cancellation. Reads use `no-store`.
 
 ```ts
 import { OgSnap } from "og-snap/client";
@@ -165,3 +173,18 @@ No automatic capture retries. The client throws `OgSnapError` for API errors.
 For Astro, emit `manifest.image.url` directly in `og:image`/`twitter:image` and
 invalidate the affected cached page after publication. VOD retains its maintenance,
 recording selection and pin rules, then submits selected captures with metadata.
+
+### Request journals (Node/Bun)
+
+`og-snap/journal` exports `captureWithJournal(client, input, path)`, which creates
+an exclusive local JSON request record before submitting. Use
+`inspectJournal(client, path)` after an interruption to read both status and current
+manifest. Missing request/head records are returned as null. Neither helper retries
+captures, and the journal never contains credentials. Choose a new file for each capture.
+
+### Packaging the client
+
+`bun pm pack --destination /path/to/consumer/vendor` produces `og-snap-0.2.0.tgz`.
+The package exports only the runtime-independent client/types and Node/Bun journal
+helper; Browser Run tooling is a development dependency of this service repository.
+Consumers can pin the tarball as a `file:` dependency and commit it with their lockfile.

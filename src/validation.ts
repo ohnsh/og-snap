@@ -49,6 +49,7 @@ export function normalizeCapture(input: unknown, policy: ConsumerPolicy): Normal
   only(value, [
     "key",
     "url",
+    "alt",
     "resolution",
     "selector",
     "readySelector",
@@ -76,6 +77,8 @@ export function normalizeCapture(input: unknown, policy: ConsumerPolicy): Normal
       "This capture URL is not configured for the consumer",
     );
   url.hash = "";
+  if (value.alt !== undefined && (typeof value.alt !== "string" || value.alt.length > 500))
+    invalid("alt must be a string of at most 500 characters");
   const resolution =
     value.resolution === undefined ? { width: 1200, height: 865 } : record(value.resolution);
   only(resolution, ["width", "height"]);
@@ -111,6 +114,7 @@ export function normalizeCapture(input: unknown, policy: ConsumerPolicy): Normal
   return {
     key: value.key as string,
     url: url.href,
+    ...(value.alt !== undefined ? { alt: value.alt as string } : {}),
     resolution: { width: width as number, height: height as number },
     background: background as string,
     readySelector: selector(value.readySelector ?? '[data-og-ready="true"]', "readySelector"),

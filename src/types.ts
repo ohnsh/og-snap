@@ -13,6 +13,8 @@ export interface CaptureRequest<M extends Metadata = Metadata> {
   /** Opaque, slash-separated key within the authenticated consumer's namespace. */
   key: string;
   url: string;
+  /** Application-supplied image description, at most 500 characters. */
+  alt?: string;
   resolution?: Resolution;
   /** Entire viewport by default; otherwise capture one element. */
   selector?: string;
@@ -31,7 +33,7 @@ export interface Manifest<M extends Metadata = Metadata> {
   key: string;
   revision: string;
   createdAt: string;
-  image: { url: string; width: 1200; height: 630; contentType: "image/jpeg" };
+  image: { url: string; width: 1200; height: 630; contentType: "image/jpeg"; alt?: string };
   capture: { resolution: Resolution; source: Resolution };
   metadata: M;
 }
@@ -58,5 +60,7 @@ export interface ConsumerPolicy {
   resourceOrigins: string[];
 }
 
-export type NormalizedCapture = Required<Omit<CaptureRequest, "selector" | "errorSelector">> &
-  Pick<CaptureRequest, "selector" | "errorSelector">;
+export type NormalizedCapture = Required<
+  Omit<CaptureRequest, "selector" | "errorSelector" | "alt">
+> &
+  Pick<CaptureRequest, "selector" | "errorSelector" | "alt">;
