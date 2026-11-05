@@ -23,7 +23,8 @@ Install local Chromium with `bunx playwright install chromium` if needed. Local
 HTTP/R2 tests use Miniflare; hosted Browser Run itself is verified after deployment.
 The browser tests verify proportional fitting in local Chromium. The runtime test
 overrides the compatibility date to 2026-10-19 for the pinned local workerd;
-production uses 2026-11-05.
+production uses 2026-11-05. `bun run dev` also uses 2026-10-19, selected by
+Vite's `development` mode in `cloudflare.config.ts`.
 
 Review `consumers.json` before deploying: each consumer has exact HTTPS preview
 origin/path pairs and permitted subresource origins. Query strings may vary.

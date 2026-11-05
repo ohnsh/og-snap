@@ -1,11 +1,12 @@
 import { bindings, defineConfig } from "cf/config";
 import consumers from "./consumers.json" with { type: "json" };
 
-export default defineConfig(({ isPreview }) => ({
+export default defineConfig(({ isPreview, mode }) => ({
   worker: {
     name: "og-snap",
     entrypoint: "./src/worker.ts",
-    compatibilityDate: "2026-11-05",
+    // The pinned local workerd supports dates through 2026-10-19.
+    compatibilityDate: mode === "development" ? "2026-10-19" : "2026-11-05",
     compatibilityFlags: ["nodejs_compat"],
     domains: isPreview ? undefined : ["og.ohn.sh"],
     workersDev: false,
