@@ -1,0 +1,2 @@
+# Generate a different random token for each consumer. This is one JSON-valued secret.
+CONSUMER_TOKENS='{"vod":"replace-with-random-token","days":"replace-with-another-random-token"}'

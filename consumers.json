@@ -1,0 +1,22 @@
+{
+  "vod": {
+    "captureUrls": ["https://vod.ohn.sh/social/preview"],
+    "resourceOrigins": [
+      "https://vod.ohn.sh",
+      "https://vod-media.ohn.sh",
+      "https://fonts.googleapis.com",
+      "https://fonts.gstatic.com"
+    ]
+  },
+  "days": {
+    "captureUrls": ["https://days-next.ohn.sh/social/preview"],
+    "resourceOrigins": [
+      "https://days-next.ohn.sh",
+      "https://vod.ohn.sh",
+      "https://vod-media.ohn.sh",
+      "https://fonts.googleapis.com",
+      "https://fonts.gstatic.com",
+      "https://i.ytimg.com"
+    ]
+  }
+}
