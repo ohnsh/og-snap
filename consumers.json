@@ -9,8 +9,9 @@
     ]
   },
   "days": {
-    "captureUrls": ["https://days-next.ohn.sh/social/preview"],
+    "captureUrls": ["https://days.ohn.sh/social/preview"],
     "resourceOrigins": [
+      "https://days.ohn.sh",
       "https://days-next.ohn.sh",
       "https://vod.ohn.sh",
       "https://vod-media.ohn.sh",

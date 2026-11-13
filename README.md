@@ -155,7 +155,7 @@ const requestId = crypto.randomUUID(); // persist before calling for timeout rec
 const result = await snap.capture(
     {
         key: "dates/2026-11-05",
-        url: "https://days-next.ohn.sh/social/preview?day=2026-11-05",
+        url: "https://days.ohn.sh/social/preview?day=2026-11-05",
         resolution: { width: 1600, height: 900 },
         metadata: { day: "2026-11-05", title: "A day in the archive" },
         publication: { mode: "create" },
