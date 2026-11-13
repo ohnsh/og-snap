@@ -74,6 +74,16 @@ test("alt is published, validated and participates in idempotency", async () => 
   expect(input({ alt: "" }).alt).toBe("");
 });
 
+test("colon keys publish and recover through request status", async () => {
+  const f = fixture();
+  const result = await f.run("request-colon", input({ key: "items/youtube:abc-123" }), "days");
+  expect(result.manifest.key).toBe("items/youtube:abc-123");
+  expect(await requestStatus(f.store, "days", "request-colon")).toMatchObject({
+    status: "completed",
+    manifest: result.manifest,
+  });
+});
+
 test("concurrent requests launch once; expired capture cannot overwrite newer publication", async () => {
   const f = fixture();
   let finish!: () => void;

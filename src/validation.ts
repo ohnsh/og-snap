@@ -3,7 +3,7 @@ import type { ConsumerPolicy, Metadata, NormalizedCapture, Publication } from ".
 
 export const validConsumer = (value: string) => /^[a-z0-9][a-z0-9_-]{0,63}$/.test(value);
 export const validKey = (value: string) =>
-  value.length <= 240 && /^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*$/.test(value);
+  value.length <= 240 && /^[a-zA-Z0-9_:-]+(?:\/[a-zA-Z0-9_:-]+)*$/.test(value);
 export const validRequestId = (value: string) => /^[a-zA-Z0-9_-]{8,100}$/.test(value);
 export const validRevision = (value: string) =>
   /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(value);
@@ -60,7 +60,7 @@ export function normalizeCapture(input: unknown, policy: ConsumerPolicy): Normal
   ]);
   if (typeof value.key !== "string" || !validKey(value.key))
     invalid(
-      "key must contain slash-separated letters, digits, underscores or hyphens (maximum 240 characters)",
+      "key must contain slash-separated letters, digits, underscores, colons or hyphens (maximum 240 characters)",
     );
   if (typeof value.url !== "string" || value.url.length > 4096)
     invalid("url is required (maximum 4096 characters)");

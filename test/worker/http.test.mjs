@@ -56,6 +56,16 @@ test("built Worker authenticates, isolates request status, validates capture and
       JSON.stringify({ status: "completed", key: "cameras/quad", revision, manifest }),
     );
     assert.deepEqual(await (await send("/v1/manifests/vod/cameras/quad")).json(), manifest);
+    await bucket.put("private/heads/days/items/youtube:abc-123.json", JSON.stringify({ manifest }));
+    assert.deepEqual(
+      await (await send("/v1/manifests/days/items/youtube%3Aabc-123")).json(),
+      manifest,
+    );
+    assert.deepEqual(
+      await (await send("/v1/manifests/days/items/youtube:abc-123")).json(),
+      manifest,
+    );
+    assert.equal((await send("/v1/manifests/days/items%2Fyoutube:abc-123")).status, 400);
     assert.equal((await send("/v1/requests/request-test", { headers })).status, 200);
     assert.equal(
       (

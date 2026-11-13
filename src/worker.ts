@@ -75,7 +75,19 @@ export default {
   async fetch(request, env): Promise<Response> {
     let id: string | undefined;
     try {
-      const path = new URL(request.url).pathname;
+      let path: string;
+      try {
+        path = new URL(request.url).pathname
+          .split("/")
+          .map((segment) => {
+            const decoded = decodeURIComponent(segment);
+            if (decoded.includes("/")) throw new Error("Encoded separator");
+            return decoded;
+          })
+          .join("/");
+      } catch {
+        throw new SnapError(400, "invalid_request", "Invalid URL path encoding");
+      }
       const store = r2Store(env.SNAPSHOTS);
       if (path === "/v1/snapshots" && request.method === "POST") {
         const { consumer, policy } = await authenticate(request, env);

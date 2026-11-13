@@ -85,7 +85,7 @@ For a generic full-viewport page, `resolution` directly sets the composition vie
 - Optional `alt` is an application-supplied string of at most 500 characters,
   published as `manifest.image.alt`. It participates in idempotency comparisons.
   Omission and an explicit empty description are preserved distinctly.
-- Total request limit: 32 KiB. Keys use slash-separated letters, digits, `_`, `-`.
+- Total request limit: 32 KiB. Keys use slash-separated letters, digits, `_`, `-`, `:` (for example `items/youtube:VIDEO_ID`).
 - Navigation redirects and frames are blocked. Resource requests require configured
   HTTPS origins. Service workers and WebSockets are blocked. API tokens are never
   forwarded to the browser. Preview routes must be accessible without those tokens.
@@ -188,3 +188,33 @@ captures, and the journal never contains credentials. Choose a new file for each
 The package exports only the runtime-independent client/types and Node/Bun journal
 helper; Browser Run tooling is a development dependency of this service repository.
 Consumers can pin the tarball as a `file:` dependency and commit it with their lockfile.
+
+### Shared consumer tooling
+
+`og-snap/cli` is a Node/Bun-only runner for thin consumer scripts:
+
+```ts
+import { runCapture, inspectJournal } from 'og-snap/cli';
+
+const result = await runCapture({
+  client: new OgSnap({ consumer: 'days', token: process.env.OG_SNAP_TOKEN }),
+  request: { key: 'items/youtube:VIDEO_ID', url: 'https://days.ohn.sh/social/preview?id=youtube%3AVIDEO_ID' },
+  journalDirectory: '.og-snap',
+  onJournal: path => console.error(`Request journal: ${path}`),
+});
+```
+
+The runner reads the current manifest, chooses create or revision-checked replace,
+and writes a journal before capture. Reads have a 10-second timeout; capture has a
+120-second timeout. It never retries. On interruption, use `inspectJournal(client,
+path)` to inspect both status and current head. Consumers own argument parsing,
+selection, and post-publication cache invalidation. Report purge failures separately
+from successful publication; retry purging without recapturing.
+
+`og-snap/meta` provides `socialMeta({ title, description, url, siteName?, type?,
+image? })`, returning structured OpenGraph/Twitter meta-tag attributes. `image`
+accepts `{ url, width?, height?, alt? }`, including `manifest.image` directly.
+Render descriptors using framework attribute escaping, or use
+`renderMetaTags(tags)` for escaped HTML suitable for HTMLRewriter. Consumers own
+canonical links and the standard description tag. These helpers have no runtime
+or network dependency and work with direct image URLs as well as og-snap images.

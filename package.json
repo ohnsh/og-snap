@@ -6,12 +6,16 @@
     "src/client.ts",
     "src/types.ts",
     "src/manifest.ts",
-    "src/journal.ts"
+    "src/journal.ts",
+    "src/cli.ts",
+    "src/meta.ts"
   ],
   "type": "module",
   "exports": {
     "./client": "./src/client.ts",
     "./journal": "./src/journal.ts",
+    "./cli": "./src/cli.ts",
+    "./meta": "./src/meta.ts",
     "./types": "./src/types.ts"
   },
   "scripts": {
