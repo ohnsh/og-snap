@@ -10,21 +10,21 @@ different routes—think slightly more abstract than a URL.
 
 Currently, this project ships with configuration very specific to my projects,
 but there's a foundation here that could easily be generalized. Going forward,
-most of my work on it will be to that effect.
+most of my work here will be to that effect.
 
 Consuming projects are authenticated using simple per-project tokens defined in
 a git-ignored `secrets.json`. Here's what mine looks like:
 
 ```json
 {
-  "CONSUMER_TOKENS": "{\"vod\":\"YOUR_RANDOM_VOD_TOKEN\",\"days\":\"YOUR_RANDOM_DAYS_TOKEN\"}"
+  "CONSUMER_TOKENS": "{\"vod\":\"RANDOM_VOD_TOKEN\",\"days\":\"RANDOM_DAYS_TOKEN\"}"
 }
 ```
 
 This project uses Cloudflare's `cf`, which if I'm not mistaken is the successor
 to `wrangler`. Currently, `https://og.ohn.sh` is the hardcoded deployment
-domain, and the default value of the `PUBLIC_ORIGIN` environment variable, which
-is used to write snapshot URLs in JSON manifests.
+domain. It's also the default value of the `PUBLIC_ORIGIN` environment variable,
+used to write snapshot URLs in JSON manifests.
 
 ```sh
 bun run build
