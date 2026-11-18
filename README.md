@@ -3,17 +3,17 @@
 A service, implemented as a Cloudflare Worker with a Browser Run backend, that
 takes a browser snapshot of a given URL and saves it, along with a JSON
 manifest, to an R2 bucket. Also provides a client helper library for consumers.
-Snapshots are associated with client-defined key meant to be associated with
+Snapshots are associated with consumer-defined key meant to be associated with
 different routes—think slightly more abstract than a URL.
 
 ## Usage
 
-Currently, this project ships with configuration very specific to my projects,
-but there's a foundation here that could easily be generalized. Going forward,
-most of my work here will be to that effect.
+Currently, og-snap ships with configuration very specific to my projects, but
+there's a foundation here that could easily be generalized. Going forward, most
+of my work here will be to that effect.
 
-Consuming projects are authenticated using simple per-project tokens defined in
-a git-ignored `secrets.json`. Here's what mine looks like:
+Consumers are authenticated using simple per-project tokens defined in a
+git-ignored `secrets.json`. Here's what mine looks like:
 
 ```json
 {
@@ -21,10 +21,10 @@ a git-ignored `secrets.json`. Here's what mine looks like:
 }
 ```
 
-This project uses Cloudflare's `cf`, which if I'm not mistaken is the successor
-to `wrangler`. Currently, `https://og.ohn.sh` is the hardcoded deployment
-domain. It's also the default value of the `PUBLIC_ORIGIN` environment variable,
-used to write snapshot URLs in JSON manifests.
+This project uses Cloudflare's `cf`, which, if I'm not mistaken, is the
+successor to `wrangler`. Currently, `https://og.ohn.sh` is the hardcoded
+deployment domain. It's also the default value of `PUBLIC_ORIGIN`, used to write
+snapshot URLs in JSON manifests.
 
 ```sh
 bun run build
