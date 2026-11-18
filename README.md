@@ -35,11 +35,11 @@ bunx cf deploy --prebuilt --mode production --secrets-file secrets.json
 
 ```sh
 curl https://og.ohn.sh/v1/snapshots \
-	-H 'X-OG-Consumer: vod' \
-	-H "Authorization: Bearer $OG_SNAP_TOKEN" \
-	-H 'Idempotency-Key: capture-20261105-quad-001' \
-	-H 'Content-Type: application/json' \
-	--data '{
+  -H 'X-OG-Consumer: vod' \
+  -H "Authorization: Bearer $OG_SNAP_TOKEN" \
+  -H 'Idempotency-Key: capture-20261105-quad-001' \
+  -H 'Content-Type: application/json' \
+  --data '{
     "key": "cameras/quad",
      "url": "https://vod.ohn.sh/social/preview?camera=quad",
      "alt": "Quad camera archive in the VOD player",
